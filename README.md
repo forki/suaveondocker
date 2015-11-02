@@ -6,8 +6,8 @@ This is a proof of concept for running [Suave](http://suave.io/) on Docker.
 
 # Run the container
 
-    docker run -p 8084:8080 forki/suave:0.1
-
+    docker run --rm -d -p 8080:8080 forki/suave
+    
 # Inspect the website
 
-Go to 192.168.99.101:8084 (or whatever the ip of your hostsystem is).
+Go to 192.168.99.101:8080 (or whatever the ip of your hostsystem is).
