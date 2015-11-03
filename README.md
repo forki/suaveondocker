@@ -6,7 +6,7 @@ This is a proof of concept for running [Suave](http://suave.io/) on Docker.
 
 # Run the container
 
-    docker run --rm -d -p 8080:8080 forki/suave
+    docker run -d -p 8080:8080 forki/suave:0.1
     
 # Inspect the website
 
