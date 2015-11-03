@@ -1,10 +1,3 @@
-#if BOOTSTRAP
-System.Environment.CurrentDirectory <- __SOURCE_DIRECTORY__
-if not (System.IO.File.Exists "paket.exe") then let url = "https://github.com/fsprojects/Paket/releases/download/0.27.2/paket.exe" in use wc = new System.Net.WebClient() in let tmp = System.IO.Path.GetTempFileName() in wc.DownloadFile(url, tmp); System.IO.File.Move(tmp,System.IO.Path.GetFileName url);;
-#r "paket.exe"
-Paket.Dependencies.Install (System.IO.File.ReadAllText "paket.dependencies")
-#endif
-
 //---------------------------------------------------------------------
 
 #I "packages/Suave/lib/net40"
@@ -17,11 +10,11 @@ open Suave.Http
 open Suave.Http.Applicatives
 open Suave.Http.Successful // for OK-result
 open Suave.Web             // for config
-open Suave.Types     
+open Suave.Types
 
 printfn "initializing script..."
 
-let species = 
+let species =
   [("Plant (tree)", "Baishan Fir"); ("Insect (butterfly)", "");
    ("Reptile", "Leaf scaled sea-snake");
    ("Insect (damselfly)", "Amani flatwing"); ("Bird", "Araripe manakin");
@@ -95,23 +88,23 @@ let species =
    ("Fish", ""); ("Plant", "Forest coconut");
    ("Mammal", "Attenborough’s echidna")]
 
-let speciesSorted = 
-    species 
-      |> Seq.countBy fst 
+let speciesSorted =
+    species
+      |> Seq.countBy fst
       |> Seq.sortBy (snd >> (~-))
       |> Seq.toList
 
 
-let config =     
+let config =
     let ip = IPAddress.Parse "0.0.0.0"
-    { defaultConfig with 
+    { defaultConfig with
         logger = Logging.Loggers.saneDefaultsFor Logging.LogLevel.Verbose
         bindings=[ HttpBinding.mk HTTP ip 8080us ] }
 
-let text = 
+let text =
     [ yield "<html><body><ul>"
       for (category,count) in speciesSorted do
-         yield sprintf "<li>Category <b>%s</b>: <b>%d</b></li>" category count 
+         yield sprintf "<li>Category <b>%s</b>: <b>%d</b></li>" category count
       yield "</ul></body></html>" ]
     |> String.concat "\n"
 
@@ -120,7 +113,7 @@ let angularHeader = """<head>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
 </head>"""
 
-let animalsText = 
+let animalsText =
     [ yield """<html>"""
       yield angularHeader
       yield """ <body>"""
@@ -129,14 +122,14 @@ let animalsText =
       yield """   <thead><tr><th>Category</th><th>Count</th></tr></thead>"""
       yield """   <tbody>"""
       for (category,count) in speciesSorted do
-         yield sprintf "<tr><td>%s</td><td>%d</td></tr>" category count 
+         yield sprintf "<tr><td>%s</td><td>%d</td></tr>" category count
       yield """   </tbody>"""
       yield """  </table>"""
-      yield """ </body>""" 
+      yield """ </body>"""
       yield """</html>""" ]
     |> String.concat "\n"
 
-let thingsText n = 
+let thingsText n =
     [ yield """<html>"""
       yield angularHeader
       yield """ <body>"""
@@ -145,24 +138,24 @@ let thingsText n =
       yield """   <thead><tr><th>Thing</th><th>Value</th></tr></thead>"""
       yield """   <tbody>"""
       for i in 1 .. n do
-         yield sprintf "<tr><td>Thing %d</td><td>%d</td></tr>" i i  
+         yield sprintf "<tr><td>Thing %d</td><td>%d</td></tr>" i i
       yield """   </tbody>"""
       yield """  </table>"""
-      yield """ </body>""" 
+      yield """ </body>"""
       yield """</html>""" ]
     |> String.concat "\n"
 
-let homePage = 
+let homePage =
     [ yield """<html>"""
-      yield angularHeader 
+      yield angularHeader
       yield """ <body>"""
       yield """ <h1>Sample Web App</h1>"""
       yield """  <table class="table table-striped">"""
       yield """   <thead><tr><th>Page</th><th>Link</th></tr></thead>"""
       yield """   <tbody>"""
-      yield """      <tr><td>Endangered Animals</td><td><a href="/animals">Link to animals</a></td></tr>""" 
-      yield """      <tr><td>Things</td><td><a href="/things/10">Link to things (10)</a></td></tr>""" 
-      yield """      <tr><td>Things</td><td><a href="/things/100">Link to things (100)</a></td></tr>""" 
+      yield """      <tr><td>Endangered Animals</td><td><a href="/animals">Link to animals</a></td></tr>"""
+      yield """      <tr><td>Things</td><td><a href="/things/10">Link to things (10)</a></td></tr>"""
+      yield """      <tr><td>Things</td><td><a href="/things/100">Link to things (100)</a></td></tr>"""
       yield """      <tr><td>API JSON</td><td><a href="/api/json/100">Link to result (100)</a></td></tr>"""
       yield """      <tr><td>API XML</td><td><a href="/api/xml/100">Link to result (100)</a></td></tr>"""
       yield """      <tr><td>API JSON</td><td><a href="/api/json/10">Link to result (10)</a></td></tr>"""
@@ -170,13 +163,13 @@ let homePage =
       yield """      <tr><td>Goodbye</td><td><a href="/goodbye">Link</a></td></tr>"""
       yield """   </tbody>"""
       yield """  </table>"""
-      yield """ </body>""" 
+      yield """ </body>"""
       yield """</html>""" ]
     |> String.concat "\n"
 
 printfn "starting web server..."
 
-let jsonText n = 
+let jsonText n =
     """
 {"menu": {
   "id": "file",
@@ -187,9 +180,9 @@ let jsonText n =
       [ for i in 1 .. n -> sprintf """{"value": "%d"},""" i ] + """
     ]
   }
-}}""" 
+}}"""
 
-let xmlText n = 
+let xmlText n =
     """
 <menu id="file" value="File">
   <popup>
@@ -198,11 +191,11 @@ let xmlText n =
     <menuitem value="Open" />
     <menuitem value="Close"  />
   </popup>
-</menu>""" 
+</menu>"""
 
 let xmlMime = Writers.setMimeType "application/xml"
 let jsonMime = Writers.setMimeType "application/json"
-let app = 
+let app =
   choose
     [ GET >>= choose
                 [ path "/" >>= OK homePage
@@ -216,9 +209,7 @@ let app =
       POST >>= choose
                 [ path "/hello" >>= OK "Hello POST"
                   path "/goodbye" >>= OK "Good bye POST" ] ]
-    
+
 
 startWebServer config app
 printfn "exiting server..."
-
-
