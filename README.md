@@ -13,4 +13,4 @@ This is a proof of concept for running [Suave](http://suave.io/) on Docker.
 Go to 192.168.99.100:8080 (or whatever the ip of your hostsystem is).
 
 
-![image](helloworld.png)
+![image](animals.png)
