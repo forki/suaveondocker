@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------
 
-#I "packages/Suave/lib/net40"
-#r "packages/Suave/lib/net40/Suave.dll"
+#I "../packages/Suave/lib/net40"
+#r "../packages/Suave/lib/net40/Suave.dll"
 
 open System
 open System.Net

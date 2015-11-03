@@ -1,5 +1,5 @@
 FROM fsharp/fsharp
-COPY ./src .
+COPY . .
 RUN mono ./.paket/paket.bootstrapper.exe
 RUN mono ./.paket/paket.exe restore
-CMD ["fsharpi", "app.fsx"]
+CMD ["fsharpi", "src/app.fsx"]
