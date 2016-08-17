@@ -5,12 +5,12 @@
 
 open System
 open System.Net
-open Suave                 // always open suave
+open Suave            // always open suave
 open Suave.Http
-open Suave.Http.Applicatives
-open Suave.Http.Successful // for OK-result
-open Suave.Web             // for config
-open Suave.Types
+open Suave.Filters
+open Suave.Operators
+open Suave.Successful // for OK-result
+open Suave.Web        // for config
 
 printfn "initializing script..."
 
@@ -197,18 +197,18 @@ let xmlMime = Writers.setMimeType "application/xml"
 let jsonMime = Writers.setMimeType "application/json"
 let app =
   choose
-    [ GET >>= choose
-                [ path "/" >>= OK homePage
-                  path "/animals" >>= OK animalsText
+    [ GET >=> choose
+                [ path "/" >=> OK homePage
+                  path "/animals" >=> OK animalsText
                   pathScan "/things/%d" (fun n -> OK (thingsText n))
-                  path "/api/json" >>= jsonMime >>= OK (jsonText 100)
-                  pathScan "/api/json/%d" (fun n -> jsonMime >>= OK (jsonText n))
-                  path "/api/xml" >>= xmlMime >>= OK (xmlText 100)
-                  pathScan "/api/xml/%d" (fun n -> xmlMime >>= OK (xmlText n))
-                  path "/goodbye" >>= OK "Good bye GET" ]
-      POST >>= choose
-                [ path "/hello" >>= OK "Hello POST"
-                  path "/goodbye" >>= OK "Good bye POST" ] ]
+                  path "/api/json" >=> jsonMime >=> OK (jsonText 100)
+                  pathScan "/api/json/%d" (fun n -> jsonMime >=> OK (jsonText n))
+                  path "/api/xml" >=> xmlMime >=> OK (xmlText 100)
+                  pathScan "/api/xml/%d" (fun n -> xmlMime >=> OK (xmlText n))
+                  path "/goodbye" >=> OK "Good bye GET" ]
+      POST >=> choose
+                [ path "/hello" >=> OK "Hello POST"
+                  path "/goodbye" >=> OK "Good bye POST" ] ]
 
 
 startWebServer config app
